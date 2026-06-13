@@ -6,21 +6,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>SEKOPÄÄ</h1>
-
-<p>Tervetuloa peliin!</p>
-
-<button onclick="startGame()">Play</button>
-<button onclick="settings()">Settings</button>
-<button onclick="quitGame()">Quit</button>
-
+    
 <h1>SEKOPÄÄ</h1>
 
-<p>Tervetuloa peliin!</p>
+<div id="menu">
+    <p>Tervetuloa peliin!</p>
 
-<button>Play</button>
-<button>Settings</button>
-<button>Quit</button>
+    <button onclick="startGame()">Play</button>
+    <button onclick="settings()">Settings</button>
+    <button onclick="quitGame()">Quit</button>
+</div>
+
+<div id="game" style="display:none;">
+    <p>Bob: Hei! 😊</p>
+</div>
 
 <script src="script.js"></script>
 
