@@ -79,27 +79,56 @@ wall4.position.set(10,1.5,0);
 scene.add(wall4);
 const bob = new THREE.Group();
 
-// vartalo
+// 🟦 vartalo (vaaleansininen paita)
 const body = new THREE.Mesh(
-    new THREE.BoxGeometry(0.5,1,0.5),
-    new THREE.MeshBasicMaterial({color:0xff0000})
+    new THREE.BoxGeometry(0.6,1,0.4),
+    new THREE.MeshBasicMaterial({color:0x66ccff})
 );
 body.position.y = 1;
 bob.add(body);
 
-// pää
+// 🙂 pää
 const head = new THREE.Mesh(
     new THREE.BoxGeometry(0.5,0.5,0.5),
-    new THREE.MeshBasicMaterial({color:0xff4444})
+    new THREE.MeshBasicMaterial({color:0xffcc99})
 );
-head.position.y = 1.6;
+head.position.y = 1.65;
 bob.add(head);
 
-// jalat
-const leg1 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2,0.8,0.2),
-    new THREE.MeshBasicMaterial({color:0xaa0000})
+// 👀 silmät
+const eyeMat = new THREE.MeshBasicMaterial({color:0x000000});
+
+const eye1 = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.08,0.08), eyeMat);
+eye1.position.set(-0.12,1.7,0.26);
+bob.add(eye1);
+
+const eye2 = eye1.clone();
+eye2.position.set(0.12,1.7,0.26);
+bob.add(eye2);
+
+// 👄 suu
+const mouth = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2,0.05,0.05),
+    new THREE.MeshBasicMaterial({color:0x000000})
 );
+mouth.position.set(0,1.5,0.26);
+bob.add(mouth);
+
+// 🖐️ kädet
+const armMat = new THREE.MeshBasicMaterial({color:0xffcc99});
+
+const arm1 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.7,0.2), armMat);
+arm1.position.set(-0.45,1,0);
+bob.add(arm1);
+
+const arm2 = arm1.clone();
+arm2.position.set(0.45,1,0);
+bob.add(arm2);
+
+// 👖 jalat (tummansininen)
+const legMat = new THREE.MeshBasicMaterial({color:0x0b1a66});
+
+const leg1 = new THREE.Mesh(new THREE.BoxGeometry(0.25,0.8,0.25), legMat);
 leg1.position.set(-0.15,0.4,0);
 bob.add(leg1);
 
@@ -107,10 +136,20 @@ const leg2 = leg1.clone();
 leg2.position.set(0.15,0.4,0);
 bob.add(leg2);
 
-// paikka huoneessa
+// 📍 paikka
 bob.position.set(0,0,-3);
 
 scene.add(bob);
+
+// 🪑 SOHVA TÄHÄN ALLE
+const sofa = new THREE.Mesh(
+    new THREE.BoxGeometry(2,0.8,1),
+    new THREE.MeshBasicMaterial({color:0x333333})
+);
+
+sofa.position.set(3,0.4,-2);
+
+scene.add(sofa);
 // PLAYER
 camera.position.y = 2;
 
@@ -121,16 +160,28 @@ document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
 document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
 function move(){
-    if(keys["w"]) camera.position.z -= 0.1;
-    if(keys["s"]) camera.position.z += 0.1;
-    if(keys["a"]) camera.position.x -= 0.1;
-    if(keys["d"]) camera.position.x += 0.1;
+
+    let speed = 0.1;
+
+    let nextX = camera.position.x;
+    let nextZ = camera.position.z;
+
+    if(keys["w"]) nextZ -= speed;
+    if(keys["s"]) nextZ += speed;
+    if(keys["a"]) nextX -= speed;
+    if(keys["d"]) nextX += speed;
+
+    // 🧱 seinärajat (huoneen sisällä pysyminen)
+    if(nextX > -9 && nextX < 9) camera.position.x = nextX;
+    if(nextZ > -9 && nextZ < 9) camera.position.z = nextZ;
 }
 
 // LOOP
 function animate(){
     requestAnimationFrame(animate);
     move();
+    bob.lookAt(camera.position);
+bob.position.y = Math.sin(Date.now() * 0.002) * 0.05;
     renderer.render(scene,camera);
 }
 animate();
