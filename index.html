@@ -31,22 +31,22 @@ body { margin:0; overflow:hidden; }
     let yaw = 0;
 let pitch = 0;
 
-// 🔓 klikkaus vapauttaa hiiren peliin
-document.body.addEventListener("click", async () => {
-    await document.body.requestPointerLock();
+// 🔓 aktivoi hiiri klikkauksella
+document.addEventListener("click", () => {
+    document.body.requestPointerLock();
 });
 
 // 🖱️ hiiren liike
 document.addEventListener("mousemove", (event) => {
     if (document.pointerLockElement === document.body) {
 
-        yaw -= event.movementX * 0.002;   // sivulle kääntyminen
-        pitch -= event.movementY * 0.002; // ylös/alas
+        yaw -= event.movementX * 0.002;
+        pitch -= event.movementY * 0.002;
 
+        // rajoitetaan ylös/alas
         pitch = Math.max(-1.5, Math.min(1.5, pitch));
     }
 });
-
 // SCENE
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
@@ -196,45 +196,52 @@ function move(){
     let right = new THREE.Vector3();
     right.crossVectors(forward, new THREE.Vector3(0,1,0));
 
-    if(keys["w"]) {
-        camera.position.addScaledVector(forward, speed);
-    }
-    if(keys["s"]) {
-        camera.position.addScaledVector(forward, -speed);
-    }
-    if(keys["d"]) {
-        camera.position.addScaledVector(right, speed);
-    }
-    if(keys["a"]) {
-        camera.position.addScaledVector(right, -speed);
-    }
-}
+    let nextPos = camera.position.clone();
 
+    if(keys["w"]) nextPos.addScaledVector(forward, speed);
+    if(keys["s"]) nextPos.addScaledVector(forward, -speed);
+    if(keys["d"]) nextPos.addScaledVector(right, speed);
+    if(keys["a"]) nextPos.addScaledVector(right, -speed);
+
+    // 🧱 HUONEEN RAJAT (estää seinien läpi menon)
+    nextPos.x = Math.max(-9, Math.min(9, nextPos.x));
+    nextPos.z = Math.max(-9, Math.min(9, nextPos.z));
+
+    camera.position.copy(nextPos);
+}
 // LOOP
 function animate(){
     requestAnimationFrame(animate);
 
     move();
 
+    camera.rotation.order = "YXZ";
+camera.rotation.y = yaw;
+camera.rotation.x = pitch;
+
     // 👾 BOB AI
-    let dx = camera.position.x - bob.position.x;
-    let dz = camera.position.z - bob.position.z;
+let dx = camera.position.x - bob.position.x;
+let dz = camera.position.z - bob.position.z;
 
-    let dist = Math.sqrt(dx*dx + dz*dz);
+let dist = Math.sqrt(dx*dx + dz*dz);
 
-    bob.lookAt(camera.position);
+// 👀 katsoo pelaajaa
+bob.lookAt(camera.position);
 
-    // seuraa pelaajaa jos lähellä
-    if(dist < 6){
-        bob.position.x += dx * 0.01;
-        bob.position.z += dz * 0.01;
-    }
+// 🚶 liike vain XZ-tasossa (EI Y)
+if(dist < 6){
+    bob.position.x += dx * 0.01;
+    bob.position.z += dz * 0.01;
+}
 
-    // palaa sohvalle jos kaukana
-    if(dist > 8){
-        bob.position.x += (3 - bob.position.x) * 0.02;
-        bob.position.z += (-2 - bob.position.z) * 0.02;
-    }
+// 🛋️ palaa sohvalle
+if(dist > 8){
+    bob.position.x += (3 - bob.position.x) * 0.02;
+    bob.position.z += (-2 - bob.position.z) * 0.02;
+}
+
+// 🧍 pakotetaan maahan (ei leiju / ei uppoa)
+bob.position.y = 0;
 
     renderer.render(scene, camera);
 }
