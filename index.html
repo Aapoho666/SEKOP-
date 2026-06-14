@@ -6,20 +6,20 @@
 
 <style>
 body{
-    background:#f2f2f2;
-    text-align:center;
-    font-family:Arial;
+    font-family: Arial;
+    text-align: center;
+    background: #f2f2f2;
 }
 
 h1{
-    color:red;
-    font-size:60px;
+    color: red;
+    font-size: 60px;
 }
 
 button{
-    font-size:30px;
-    padding:15px 40px;
-    margin:20px;
+    font-size: 30px;
+    padding: 15px 40px;
+    margin: 10px;
 }
 </style>
 </head>
@@ -27,32 +27,22 @@ button{
 <body>
 
 <h1>SEKOPÄÄ</h1>
-<div id="menu">
-<p>Tervetuloa peliin!</p>
 
-<button onclick="startGame()">PLAY</button>
-<br>
+<div id="menu">
+    <p>Tervetuloa peliin!</p>
+
+    <button onclick="startGame()">PLAY</button>
+</div>
+
 <div id="game" style="display:none;">
     <h2>Päivä 1</h2>
-    <p>😊 Bob: Hei! Tervetuloa kotiin...</p>
+    <p>😊 Bob: Hei! Olen vielä kiltti...</p>
 </div>
-<button onclick="settings()">SETTINGS</button>
-<br>
-
-<button onclick="quitGame()">QUIT</button>
 
 <script>
 function startGame(){
     document.getElementById("menu").style.display = "none";
     document.getElementById("game").style.display = "block";
-}
-
-function settings(){
-    alert("Asetukset tulevat myöhemmin!");
-}
-
-function quitGame(){
-    alert("Kiitos pelaamisesta!");
 }
 </script>
 
