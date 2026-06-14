@@ -27,7 +27,7 @@ button{
 <body>
 
 <h1>SEKOPÄÄ</h1>
-
+<div id="menu">
 <p>Tervetuloa peliin!</p>
 
 <button onclick="startGame()">PLAY</button>
@@ -43,7 +43,8 @@ button{
 
 <script>
 function startGame(){
-    alert("Peli alkaa! Bob tervehtii sinua 😊");
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("game").style.display = "block";
 }
 
 function settings(){
