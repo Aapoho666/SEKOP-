@@ -1,9 +1,9 @@
 function startGame(){
-    alert("Peli alkaa! (Seuraava vaihe tulee myöhemmin)");
+    alert("Peli alkaa!");
 }
 
 function settings(){
-    alert("Asetukset tulevat myöhemmin");
+    alert("Asetukset tulevat myöhemmin!");
 }
 
 function quitGame(){
