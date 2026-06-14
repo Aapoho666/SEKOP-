@@ -95,6 +95,12 @@ scene.add(wall3);
 const wall4 = new THREE.Mesh(new THREE.BoxGeometry(1,3,20), wallMat);
 wall4.position.set(10,1.5,0);
 scene.add(wall4);
+    const wall5 = new THREE.Mesh(
+    new THREE.BoxGeometry(10,3,1),
+    new THREE.MeshBasicMaterial({color:0x777777})
+);
+wall5.position.set(0,1.5,0);
+scene.add(wall5);
 const bob = new THREE.Group();
 
 // 🟦 vartalo (vaaleansininen paita)
@@ -181,17 +187,27 @@ function move(){
 
     let speed = 0.1;
 
-    let nextX = camera.position.x;
-    let nextZ = camera.position.z;
+    let forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
 
-    if(keys["w"]) nextZ -= speed;
-    if(keys["s"]) nextZ += speed;
-    if(keys["a"]) nextX -= speed;
-    if(keys["d"]) nextX += speed;
+    forward.y = 0;
+    forward.normalize();
 
-    // 🧱 seinärajat (huoneen sisällä pysyminen)
-    if(nextX > -9 && nextX < 9) camera.position.x = nextX;
-    if(nextZ > -9 && nextZ < 9) camera.position.z = nextZ;
+    let right = new THREE.Vector3();
+    right.crossVectors(forward, new THREE.Vector3(0,1,0));
+
+    if(keys["w"]) {
+        camera.position.addScaledVector(forward, speed);
+    }
+    if(keys["s"]) {
+        camera.position.addScaledVector(forward, -speed);
+    }
+    if(keys["d"]) {
+        camera.position.addScaledVector(right, speed);
+    }
+    if(keys["a"]) {
+        camera.position.addScaledVector(right, -speed);
+    }
 }
 
 // LOOP
@@ -200,10 +216,25 @@ function animate(){
 
     move();
 
-    // 👇 TÄHÄN LISÄTÄÄN KAMERA-KOODI
-    camera.rotation.order = "YXZ";
-    camera.rotation.y = yaw;
-    camera.rotation.x = pitch;
+    // 👾 BOB AI
+    let dx = camera.position.x - bob.position.x;
+    let dz = camera.position.z - bob.position.z;
+
+    let dist = Math.sqrt(dx*dx + dz*dz);
+
+    bob.lookAt(camera.position);
+
+    // seuraa pelaajaa jos lähellä
+    if(dist < 6){
+        bob.position.x += dx * 0.01;
+        bob.position.z += dz * 0.01;
+    }
+
+    // palaa sohvalle jos kaukana
+    if(dist > 8){
+        bob.position.x += (3 - bob.position.x) * 0.02;
+        bob.position.z += (-2 - bob.position.z) * 0.02;
+    }
 
     renderer.render(scene, camera);
 }
