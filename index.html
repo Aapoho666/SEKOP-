@@ -1,26 +1,56 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <title>Sekopää</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>SEKOPÄÄ</title>
+
+<style>
+body{
+    background:#f2f2f2;
+    text-align:center;
+    font-family:Arial;
+}
+
+h1{
+    color:red;
+    font-size:60px;
+}
+
+button{
+    font-size:30px;
+    padding:15px 40px;
+    margin:20px;
+}
+</style>
 </head>
+
 <body>
-    <h1>SEKOPÄÄ</h1>
 
-<div id="menu">
-    <p>Tervetuloa peliin!</p>
+<h1>SEKOPÄÄ</h1>
 
-    <button onclick="startGame()">Play</button>
-    <button onclick="settings()">Settings</button>
-    <button onclick="quitGame()">Quit</button>
-</div>
+<p>Tervetuloa peliin!</p>
 
-<div id="game" style="display:none;">
-    <p>Bob: Hei! 😊</p>
-</div>
+<button onclick="startGame()">PLAY</button>
+<br>
 
-<script src="script.js"></script>
+<button onclick="settings()">SETTINGS</button>
+<br>
+
+<button onclick="quitGame()">QUIT</button>
+
+<script>
+function startGame(){
+    alert("Peli alkaa! Bob tervehtii sinua 😊");
+}
+
+function settings(){
+    alert("Asetukset tulevat myöhemmin!");
+}
+
+function quitGame(){
+    alert("Kiitos pelaamisesta!");
+}
+</script>
 
 </body>
 </html>
