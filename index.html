@@ -1,10 +1,29 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Peli</title>
+
+  <!-- THREE.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+
+<body>
+
+<script>
+// ===== SCENE =====
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
 );
 
 const renderer = new THREE.WebGLRenderer();
@@ -19,89 +38,85 @@ scene.add(light);
 
 // ===== FLOOR =====
 const floor = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 1, 20),
-    new THREE.MeshBasicMaterial({ color: 0x444444 })
+  new THREE.BoxGeometry(20, 1, 20),
+  new THREE.MeshBasicMaterial({ color: 0x555555 })
 );
 floor.position.y = -1;
 scene.add(floor);
 
-// ===== WALL =====
-const wall = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 3, 1),
-    new THREE.MeshBasicMaterial({ color: 0x777777 })
-);
-wall.position.z = -5;
-scene.add(wall);
-
-// ===== BOB =====
+// ===== BOB (vihreä ukko) =====
 const bob = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 2, 1),
-    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+  new THREE.BoxGeometry(1, 2, 1),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 );
-bob.position.set(0, 0, 0);
 scene.add(bob);
 
 // ===== INPUT =====
 const keys = {};
 
-document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
+document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
-// ===== MOUSE =====
+// ===== HIIRI =====
 let yaw = 0;
 let pitch = 0;
 
 document.addEventListener("click", () => {
-    document.body.requestPointerLock();
+  document.body.requestPointerLock();
 });
 
 document.addEventListener("mousemove", (event) => {
-    if (document.pointerLockElement === document.body) {
-        yaw -= event.movementX * 0.002;
-        pitch -= event.movementY * 0.002;
-        pitch = Math.max(-1.5, Math.min(1.5, pitch));
-    }
+  if (document.pointerLockElement === document.body) {
+    yaw -= event.movementX * 0.002;
+    pitch -= event.movementY * 0.002;
+    pitch = Math.max(-1.5, Math.min(1.5, pitch));
+  }
 });
 
 // ===== MOVE =====
 function move() {
-    let speed = 0.1;
+  let speed = 0.1;
 
-    let forward = new THREE.Vector3();
-    camera.getWorldDirection(forward);
-    forward.y = 0;
-    forward.normalize();
+  let forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  forward.y = 0;
+  forward.normalize();
 
-    let right = new THREE.Vector3();
-    right.crossVectors(forward, new THREE.Vector3(0,1,0));
+  let right = new THREE.Vector3();
+  right.crossVectors(forward, new THREE.Vector3(0,1,0));
 
-    if(keys["w"]) camera.position.addScaledVector(forward, speed);
-    if(keys["s"]) camera.position.addScaledVector(forward, -speed);
-    if(keys["a"]) camera.position.addScaledVector(right, -speed);
-    if(keys["d"]) camera.position.addScaledVector(right, speed);
+  if(keys["w"]) camera.position.addScaledVector(forward, speed);
+  if(keys["s"]) camera.position.addScaledVector(forward, -speed);
+  if(keys["a"]) camera.position.addScaledVector(right, -speed);
+  if(keys["d"]) camera.position.addScaledVector(right, speed);
 }
 
 // ===== ANIMATE =====
-function animate(){
-    requestAnimationFrame(animate);
+function animate() {
+  requestAnimationFrame(animate);
 
-    move();
+  move();
 
-    // camera look
-    camera.rotation.order = "YXZ";
-    camera.rotation.y = yaw;
-    camera.rotation.x = pitch;
+  // kamera
+  camera.rotation.order = "YXZ";
+  camera.rotation.y = yaw;
+  camera.rotation.x = pitch;
 
-    // BOB FOLLOW
-    let dx = camera.position.x - bob.position.x;
-    let dz = camera.position.z - bob.position.z;
+  // Bob seuraa
+  let dx = camera.position.x - bob.position.x;
+  let dz = camera.position.z - bob.position.z;
 
-    bob.position.x += dx * 0.01;
-    bob.position.z += dz * 0.01;
+  bob.position.x += dx * 0.01;
+  bob.position.z += dz * 0.01;
 
-    bob.lookAt(camera.position);
+  bob.lookAt(camera.position);
 
-    renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
 animate();
+
+</script>
+
+</body>
+</html>
