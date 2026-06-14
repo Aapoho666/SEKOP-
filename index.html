@@ -54,11 +54,33 @@ scene.add(light);
 // FLOOR
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20,20),
-    new THREE.MeshBasicMaterial({color:0x228B22})
+    new 
+THREE.MeshBasicMaterial({color:0x228B2
+2})
 );
 floor.rotation.x = -Math.PI/2;
 scene.add(floor);
+const wallMat = new THREE.MeshBasicMaterial({color:0x888888});
 
+// takaseinä
+const wall1 = new THREE.Mesh(new THREE.BoxGeometry(20,3,1), wallMat);
+wall1.position.set(0,1.5,-10);
+scene.add(wall1);
+
+// etuseinä
+const wall2 = new THREE.Mesh(new THREE.BoxGeometry(20,3,1), wallMat);
+wall2.position.set(0,1.5,10);
+scene.add(wall2);
+
+// vasen seinä
+const wall3 = new THREE.Mesh(new THREE.BoxGeometry(1,3,20), wallMat);
+wall3.position.set(-10,1.5,0);
+scene.add(wall3);
+
+// oikea seinä
+const wall4 = new THREE.Mesh(new THREE.BoxGeometry(1,3,20), wallMat);
+wall4.position.set(10,1.5,0);
+scene.add(wall4);
 // WALLS
 const wallMat = new THREE.MeshBasicMaterial({color:0xaaaaaa});
 
